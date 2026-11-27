@@ -9,7 +9,7 @@ on:
 jobs:
   verify:
     name: Typecheck, test, build
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,7 +22,7 @@ jobs:
 
   rust-core:
     name: Rust core
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: cargo build --release --manifest-path rust-core/Cargo.toml
