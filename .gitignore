@@ -1,0 +1,13 @@
+node_modules/
+out/
+release/
+dist/
+.DS_Store
+*.log
+build/icon.iconset/
+
+rust-core/target/
+resources/bin/
+.env
+.env.*
+!.env.example

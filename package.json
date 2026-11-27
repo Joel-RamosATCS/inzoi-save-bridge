@@ -1,0 +1,107 @@
+{
+  "name": "inzoi-save-bridge",
+  "productName": "inZOI Save Bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Move inZOI saves between Mac and Windows over your local network.",
+  "license": "MIT",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit",
+    "rust:build": "cd rust-core && cargo build --release && cp target/release/inzoi-core ../resources/bin/inzoi-core",
+    "build": "npm run typecheck && electron-vite build",
+    "package:mac": "npm run build && electron-builder --mac",
+    "package:win": "npm run build && electron-builder --win",
+    "package": "npm run build && electron-builder",
+    "icons": "node scripts/generate-icons.mjs",
+    "test": "npm run typecheck && npm run test:transfer",
+    "test:transfer": "esbuild scripts/transfer-smoke.ts --bundle --platform=node --format=cjs --outfile=out/test/transfer-smoke.cjs --alias:@shared=./src/shared && node out/test/transfer-smoke.cjs",
+    "bench": "esbuild scripts/benchmark.ts --bundle --platform=node --format=cjs --outfile=out/test/benchmark.cjs --alias:@shared=./src/shared && node out/test/benchmark.cjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.0.12",
+    "electron-vite": "^5.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2",
+    "esbuild": "^0.25.12"
+  },
+  "build": {
+    "appId": "com.inzoi.savebridge",
+    "productName": "inZOI Save Bridge",
+    "directories": {
+      "buildResources": "build",
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/bin",
+        "to": "bin",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "asar": true,
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.games",
+      "icon": "build/icon.icns",
+      "hardenedRuntime": true,
+      "extendInfo": {
+        "NSDocumentsFolderUsageDescription": "inZOI Save Bridge needs access to your inZOI save folder to read and copy your saves.",
+        "NSLocalNetworkUsageDescription": "inZOI Save Bridge uses your local network to send saves to your Windows PC."
+      }
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "${productName} ${version} ${arch} Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "author": "inZOI Save Bridge contributors"
+}

@@ -1,0 +1,12 @@
+[package]
+name = "inzoi-core"
+version = "1.0.0"
+edition = "2021"
+description = "Native Rust save scanner, IZTB binary metadata parser, manifest builder, and LAN probe for inZOI Save Bridge"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

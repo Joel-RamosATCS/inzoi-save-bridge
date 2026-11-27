@@ -1,0 +1,10 @@
+export const APP_NAME = 'inZOI Save Bridge'
+export const APP_ID = 'com.inzoi.savebridge'
+export const PROTOCOL = 1
+export const DISCOVERY_PORT = 47771
+export const DEFAULT_TRANSFER_PORT = 47772
+export const DISCOVERY_INTERVAL_MS = 2500
+export const PEER_TTL_MS = 9500
+export const MAX_TRANSFER_BYTES = 64 * 1024 * 1024 * 1024
+export const MAX_TRANSFER_FILES = 25000
+export const DISCOVERY_MAGIC = 'inzoi-save-bridge'
