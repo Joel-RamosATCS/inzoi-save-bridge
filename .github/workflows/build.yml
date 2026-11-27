@@ -1,14 +1,14 @@
-name: Build desktop apps
+name: CI
 
 on:
   push:
     branches: [main]
-    tags: ['v*']
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  macos:
-    name: macOS (arm64 + x64)
+  verify:
+    name: Typecheck, test, build
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
@@ -18,31 +18,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - run: npm run package:mac
-        env:
-          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-      - uses: actions/upload-artifact@v4
-        with:
-          name: inzoi-save-bridge-macos
-          path: |
-            release/*.dmg
-            release/*.zip
-          if-no-files-found: error
+      - run: npm run build
 
-  windows:
-    name: Windows (x64 + arm64)
-    runs-on: windows-latest
+  rust-core:
+    name: Rust core
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npm run package:win
-      - uses: actions/upload-artifact@v4
-        with:
-          name: inzoi-save-bridge-windows
-          path: release/*.exe
-          if-no-files-found: error
+      - run: cargo build --release --manifest-path rust-core/Cargo.toml
